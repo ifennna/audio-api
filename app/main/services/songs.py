@@ -23,7 +23,7 @@ class SongService:
     def get(self, id):
         return Songs.query.filter_by(id=id).first()
 
-    def getAll(self):
+    def getAll():
         return Songs.query.all()
 
     def edit(self, data):
