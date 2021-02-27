@@ -1,4 +1,4 @@
-from app.main import db
+from . import db
 
 class Audiobooks(db.Model):
     __tablename__ = "audiobooks"

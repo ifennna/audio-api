@@ -1,4 +1,4 @@
-from app.main import db
+from . import db
 
 class Podcasts(db.Model):
     __tablename__ = "podcasts"
