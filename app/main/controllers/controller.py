@@ -5,10 +5,15 @@ from ..services.songs import SongService
 from ..dto.dto import Dto
 
 SONG = 'song'
+AUDIOBOOK = 'audiobook'
+PODCAST = 'podcast'
 
 api = Api()
-_song = Dto.song
-# _req = Dto.request
+dto = Dto(api)
+song_service = SongService()
+
+_song = dto.get_song_dto()
+_req = dto.get_req_dto()
 
 
 @api.route('/check')
@@ -22,10 +27,17 @@ class Files(Resource):
     @api.marshal_list_with(_song, envelope='data')
     def get(self, audio_type):
         if audio_type == SONG:
-            return SongService.getAll()
+            return song_service.getAll()
         else:
             api.abort(400)
 
+
+@api.route('/files')
+class FileCreate(Resource):
+    @api.expect(_req, validate=True)
     def post(self):
         data = request.json
-        return SongService.add(data)
+        print(request)
+        audio_type = data['audioFileType']
+        if audio_type == SONG:
+            return song_service.add(data['audioFileMetadata'])

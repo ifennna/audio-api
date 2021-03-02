@@ -6,9 +6,9 @@ from ..models.songs import Songs
 
 class SongService:
     def add(self, song_data):
-        new_song = Song(
-            name=data['name'],
-            duration=data['name'],
+        new_song = Songs(
+            name=song_data['name'],
+            duration=song_data['duration'],
             uploaded_time=datetime.datetime.utcnow()
         )
 
@@ -23,7 +23,7 @@ class SongService:
     def get(self, id):
         return Songs.query.filter_by(id=id).first()
 
-    def getAll():
+    def getAll(self):
         return Songs.query.all()
 
     def edit(self, data):
@@ -32,6 +32,6 @@ class SongService:
     def delete(self, id):
         print("moo")
 
-    def __save(data):
+    def __save(self, data):
         db.session.add(data)
         db.session.commit()
