@@ -53,3 +53,9 @@ class FileManage(Resource):
             return song_service.edit(audio_id, data['audioFileMetadata'])
         else:
             api.abort(400)
+
+    def delete(self, audio_type, audio_id):
+        if audio_type == SONG:
+            return song_service.delete(audio_id)
+        else:
+            api.abort(400)

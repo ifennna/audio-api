@@ -44,7 +44,17 @@ class SongService:
         return response
 
     def delete(self, id):
-        print("moo")
+        song = Songs.query.filter_by(id=id).first()
+
+        db.session.delete(song)
+        db.session.commit()
+
+        response = {
+            'status': 'success',
+            'message': 'Song deleted successfully'
+        }
+
+        return response
 
     def __save(self, data):
         db.session.add(data)
