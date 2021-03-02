@@ -59,3 +59,10 @@ class FileManage(Resource):
             return song_service.delete(audio_id)
         else:
             api.abort(400)
+
+    @api.marshal_list_with(_song, envelope='data')
+    def get(self, audio_type, audio_id):
+        if audio_type == SONG:
+            return song_service.get(audio_id)
+        else:
+            api.abort(400)
