@@ -37,7 +37,19 @@ class FileCreate(Resource):
     @api.expect(_req, validate=True)
     def post(self):
         data = request.json
-        print(request)
         audio_type = data['audioFileType']
         if audio_type == SONG:
             return song_service.add(data['audioFileMetadata'])
+        else:
+            api.abort(400)
+
+
+@api.route('/files/<audio_type>/<audio_id>')
+class FileManage(Resource):
+    @api.expect(_req, validate=True)
+    def put(self, audio_type, audio_id):
+        data = request.json
+        if audio_type == SONG:
+            return song_service.edit(audio_id, data['audioFileMetadata'])
+        else:
+            api.abort(400)

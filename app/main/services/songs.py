@@ -26,8 +26,22 @@ class SongService:
     def getAll(self):
         return Songs.query.all()
 
-    def edit(self, data):
-        print("mo")
+    def edit(self, id, data):
+        song = Songs.query.filter_by(id=id).first()
+        
+        if 'name' in data:
+            song.name = data['name']
+            
+        if 'duration' in data:
+            song.duration = data['duration']
+
+        self.__save(song)
+        response = {
+            'status': 'success',
+            'message': 'Song edited successfully'
+        }
+
+        return response
 
     def delete(self, id):
         print("moo")
