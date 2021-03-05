@@ -2,6 +2,7 @@ from flask import request
 from flask_restplus import Resource, Api
 
 from ..services.songs import SongService
+from ..errors.errors import ValidationError, ServerError
 from ..dto.dto import Dto
 
 SONG = 'song'
@@ -16,10 +17,16 @@ _song = dto.get_song_dto()
 _req = dto.get_req_dto()
 
 
-@api.route('/check')
-class Check(Resource):
-    def get(self):
-        return {'message': 'hello'}
+@api.errorhandler(ValidationError)
+@api.errorhandler(ServerError)
+def handle_error(error):
+    return error.to_dict(), getattr(error, 'code')
+
+@api.errorhandler
+def default_error_handler(error):
+    print(error)
+    error = ServerError()
+    return error.to_dict(), getattr(error, 'code', 500)
 
 
 @api.route('/files/<audio_type>')
@@ -29,7 +36,7 @@ class Files(Resource):
         if audio_type == SONG:
             return song_service.getAll()
         else:
-            api.abort(400)
+            raise ValidationError
 
 
 @api.route('/files')
