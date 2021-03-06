@@ -1,5 +1,7 @@
 from . import db
 
+from ..errors.errors import ValidationError
+
 class Audiobooks(db.Model):
     __tablename__ = "audiobooks"
 
@@ -12,12 +14,16 @@ class Audiobooks(db.Model):
 
     @db.validates('duration')
     def validate_duration(self, key, value):
-        assert value >= 0
+        if value < 0:
+            raise ValidationError 
+
         return value
 
-    @db.validates('uploaded_time')
-    def validate_uploaded_time(self, key, value):
-        # check that time is not in the past
+    @db.validates('title', 'author', 'narrator')
+    def validate(self, key, value):
+        if len(value) > 100:
+            raise ValidationError
+
         return value
 
     def __repr__(self):

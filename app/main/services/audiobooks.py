@@ -1,82 +1,79 @@
 import datetime
 
 from ..models import db
-from ..models.podcasts import Podcasts
+from ..models.audiobooks import Audiobooks
 
 from ..errors.errors import ValidationError, ServerError
 
 
-class PodcastService:
+class AudiobookService:
     def add(self, data):
-        required = ['name', 'duration', 'host']
+        required = ['title', 'duration', 'author', 'narrator']
         for item in required:
             if not item in data:
                 raise ValidationError
 
-        if not 'participants' in data:
-            data['participants'] = []
-
-        podcast = Podcasts(
-            name=data['name'],
+        audiobook = Audiobooks(
+            title=data['title'],
             duration=data['duration'],
-            host=data['host'],
-            participants=data['participants'],
+            author=data['author'],
+            narrator=data['narrator'],
             uploaded_time=datetime.datetime.utcnow()
         )
 
         try:
-            self.__save(podcast)
+            self.__save(audiobook)
             return {
                 'status': 'success',
-                'message': 'Podcast added successfully'
+                'message': 'Audiobook added successfully'
             }
         except Exception as e:
             raise ServerError
 
     def get(self, id):
-        podcast = Podcasts.query.filter_by(id=id).first()
+        audiobook = Audiobooks.query.filter_by(id=id).first()
 
-        if not podcast:
+        if not audiobook:
             raise ValidationError
 
-        return podcast
+        return audiobook
 
     def getAll(self):
-        return Podcasts.query.all()
+        return Audiobooks.query.all()
 
     def edit(self, id, data):
-        fields = ['name', 'duration', 'host', 'participant']
-        podcast = Podcasts.query.filter_by(id=id).first()
+        fields = ['title', 'duration', 'author', 'narrator']
+        audiobook = Audiobooks.query.filter_by(id=id).first()
 
-        if not podcast:
+        if not audiobook:
             raise ValidationError
 
         for field in fields:
             if field in data:
-                setattr(podcast, field, data[field])
+                setattr(audiobook, field, data[field])
 
         try:
-            self.__save(podcast)
+            self.__save(audiobook)
             return {
                 'status': 'success',
-                'message': 'Podcast edited successfully'
+                'message': 'Audiobook edited successfully'
             }
         except Exception as e:
             raise ServerError
 
     def delete(self, id):
-        podcast = Podcasts.query.filter_by(id=id).first()
+        audiobook = Audiobooks.query.filter_by(id=id).first()
 
-        if not podcast:
+        if not audiobook:
             raise ValidationError
 
         try:
-            db.session.delete(podcast)
+            db.session.delete(audiobook)
             db.session.commit()
 
             return {
                 'status': 'success',
-                'message': 'Podcast deleted successfully'
+                'message': 'Audiobook deleted successfully'
             }
         except Exception as e:
             raise ServerError

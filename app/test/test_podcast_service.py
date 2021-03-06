@@ -9,16 +9,26 @@ from app.main.errors.errors import ValidationError
 class TestPodcastService(BaseTestCase):
     def test_add_podcast(self):
         service = PodcastService()
-        podcast_data = {
+
+        podcast_data_one = {
             'name': 'test',
             'duration': 100,
             'host': 'generic',
             'participants': []
         }
-        response = service.add(podcast_data)
+        podcast_data_two = {
+            'name': 'test',
+            'duration': 100,
+            'host': 'generic'
+        }
 
-        self.assertIn('status', response)
-        self.assertEqual(response['status'], 'success')
+        response_one = service.add(podcast_data_one)
+        response_two = service.add(podcast_data_two)
+
+        self.assertIn('status', response_one)
+        self.assertIn('status', response_two)
+        self.assertEqual(response_one['status'], 'success')
+        self.assertEqual(response_two['status'], 'success')
 
     def test_failed_add_podcast(self):
         service = PodcastService()

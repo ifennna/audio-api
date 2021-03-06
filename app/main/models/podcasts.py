@@ -19,8 +19,8 @@ class Podcasts(db.Model):
 
         return value
 
-    @db.validates('host')
-    def validate_host(self, key, value):
+    @db.validates('host', 'name')
+    def validate(self, key, value):
         if len(value) > 100:
             raise ValidationError
 

@@ -17,5 +17,12 @@ class Songs(db.Model):
 
         return value
 
+    @db.validates('name')
+    def validate_name(self, key, value):
+        if len(value) > 100:
+            raise ValidationError
+
+        return value
+
     def __repr__(self):
         return "<Song '{}'>".format(self.name)
