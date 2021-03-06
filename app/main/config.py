@@ -1,18 +1,23 @@
 import os
 
-# postgres = os.environ['DATABASE_URL']
-postgres = ""
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
+db_name = os.environ['DB_NAME']
+db_user = os.environ['DB_USER']
+db_password = os.environ['DB_PASSWORD']
+postgres = 'postgresql://' + db_user + ':' + db_password + '@localhost/' + db_name
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY', 'my_precious_secret_key')
     DEBUG = False
 
 
 class DevelopmentConfig(Config):
-    # SQLALCHEMY_DATABASE_URI = postgres
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'audio_server_temp.db')
+    SQLALCHEMY_DATABASE_URI = postgres
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -35,5 +40,3 @@ config_by_name = dict(
     test=TestingConfig,
     prod=ProductionConfig
 )
-
-key = Config.SECRET_KEY

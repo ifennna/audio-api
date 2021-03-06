@@ -1,4 +1,10 @@
-.PHONY: run migrate test
+.PHONY: run migrate test db stop-db
+
+db:
+	docker-compose up -d
+
+stop-db:
+	docker-compose down
 
 migrate:
 	python start.py db upgrade
