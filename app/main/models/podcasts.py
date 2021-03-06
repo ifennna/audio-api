@@ -1,5 +1,7 @@
 from . import db
 
+from ..errors.errors import ValidationError
+
 class Podcasts(db.Model):
     __tablename__ = "podcasts"
 
@@ -12,18 +14,28 @@ class Podcasts(db.Model):
 
     @db.validates('duration')
     def validate_duration(self, key, value):
-        assert value >= 0
+        if value < 0:
+            raise ValidationError 
+
+        return value
+
+    @db.validates('host')
+    def validate_host(self, key, value):
+        if len(value) > 100:
+            raise ValidationError
+
         return value
 
     @db.validates('participants')
-    def participants(self, key, value):
-        assert len(value) <= 10
-            # raise ValueError("maximum nuber of supported participans is 10")
+    def validate_participants(self, key, value):
+        if len(value) > 1:
+            raise ValidationError
         
         for participant in value:
-            assert len(participant) <= 100
+            if len(participant) > 100:
+                raise ValidationError
 
-        self.participants = participants
+        return value
 
     def __repr__(self):
         return "<Podcast '{}'>".format(self.name)

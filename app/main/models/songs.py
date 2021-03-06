@@ -1,5 +1,7 @@
 from . import db
 
+from ..errors.errors import ValidationError
+
 class Songs(db.Model):
     __tablename__ = "songs"
 
@@ -10,7 +12,9 @@ class Songs(db.Model):
 
     @db.validates('duration')
     def validate_duration(self, key, value):
-        assert value >= 0
+        if value < 0:
+            raise ValidationError
+
         return value
 
     def __repr__(self):

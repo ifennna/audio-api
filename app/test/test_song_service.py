@@ -21,10 +21,15 @@ class TestSongService(BaseTestCase):
         song_data_one = {
             'duration': 100
         }
-        song_data_two = {}
+        song_data_two = {
+            'name': 'test',
+            'duration': -1
+        }
+        song_data_three = {}
 
         self.assertRaises(ValidationError, service.add, song_data_one)
         self.assertRaises(ValidationError, service.add, song_data_two)
+        self.assertRaises(ValidationError, service.add, song_data_three)
 
     def test_get_song(self):
         service = SongService()
