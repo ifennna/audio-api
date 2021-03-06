@@ -9,7 +9,7 @@ class Podcasts(db.Model):
     name = db.Column(db.String(100), nullable=False)
     duration = db.Column(db.Integer, nullable=False)
     host = db.Column(db.String(100), nullable=False)
-    participants = db.Column(db.PickleType, nullable=False)
+    participants = db.Column(db.String, nullable=True)
     uploaded_time = db.Column(db.DateTime, nullable=False)
 
     @db.validates('duration')
@@ -28,10 +28,11 @@ class Podcasts(db.Model):
 
     @db.validates('participants')
     def validate_participants(self, key, value):
-        if len(value) > 1:
+        test = value.split(', ')
+        if len(test) > 10:
             raise ValidationError
         
-        for participant in value:
+        for participant in test:
             if len(participant) > 100:
                 raise ValidationError
 

@@ -69,17 +69,27 @@ class TestPodcastService(BaseTestCase):
 
     def test_get_podcast(self):
         service = PodcastService()
-        podcast_data = {
+        podcast_data_one = {
             'name': 'test',
             'duration': 100,
             'host': 'generic',
             'participants': []
         }
-        service.add(podcast_data)
-        podcast = service.get(1)
+        podcast_data_two = {
+            'name': 'test',
+            'duration': 100,
+            'host': 'generic',
+            'participants': ['generic', 'generic', 'one generic']
+        }
+        service.add(podcast_data_one)
+        service.add(podcast_data_two)
+        podcast_one = service.get(1)
+        podcast_two = service.get(2)
 
-        self.assertEqual(podcast.id, 1)
-        self.assertEqual(podcast.name, podcast_data['name'])
+        self.assertEqual(podcast_one['id'], 1)
+        self.assertEqual(podcast_two['id'], 2)
+        self.assertEqual(podcast_one['participants'], podcast_data_one['participants'])
+        self.assertEqual(podcast_two['participants'], podcast_data_two['participants'])
 
     def test_failed_get_podcast(self):
         service = PodcastService()
@@ -100,8 +110,8 @@ class TestPodcastService(BaseTestCase):
         service.edit(1, podcast_data)
         podcast = service.get(1)
 
-        self.assertEqual(podcast.id, 1)
-        self.assertEqual(podcast.duration, podcast_data['duration'])
+        self.assertEqual(podcast['id'], 1)
+        self.assertEqual(podcast['duration'], podcast_data['duration'])
 
     def test_failed_edit_podcast(self):
         service = PodcastService()

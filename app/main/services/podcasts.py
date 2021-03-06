@@ -14,13 +14,15 @@ class PodcastService:
                 raise ValidationError
 
         if not 'participants' in data:
-            data['participants'] = []
+            participants = ''
+        else:
+            participants = ', '.join(data['participants'])
 
         podcast = Podcasts(
             name=data['name'],
             duration=data['duration'],
             host=data['host'],
-            participants=data['participants'],
+            participants=participants,
             uploaded_time=datetime.datetime.utcnow()
         )
 
@@ -31,7 +33,7 @@ class PodcastService:
                 'message': 'Podcast added successfully'
             }
         except Exception as e:
-            raise ServerError
+            raise ServerError(e)
 
     def get(self, id):
         podcast = Podcasts.query.filter_by(id=id).first()
@@ -39,10 +41,17 @@ class PodcastService:
         if not podcast:
             raise ValidationError
 
-        return podcast
+        return self.__extract(podcast)
 
     def getAll(self):
-        return Podcasts.query.all()
+        podcasts = Podcasts.query.all()
+
+        response = []
+
+        for podcast in podcasts:
+            response.append(self.__extract(podcast)) 
+
+        return response
 
     def edit(self, id, data):
         fields = ['name', 'duration', 'host', 'participant']
@@ -84,3 +93,19 @@ class PodcastService:
     def __save(self, data):
         db.session.add(data)
         db.session.commit()
+
+    def __extract(self, podcast):
+        response = {
+            'id': podcast.id,
+            'name': podcast.name,
+            'host': podcast.host,
+            'duration': podcast.duration,
+            'uploaded_time': podcast.uploaded_time
+        }
+
+        if podcast.participants == '':
+            response['participants'] = []
+        else:
+            response['participants'] = podcast.participants.split(', ')   
+
+        return response   

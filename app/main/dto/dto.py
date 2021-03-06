@@ -13,10 +13,28 @@ class Dto:
     }
 
     song = {
-        'id': fields.Integer(required=True, description='song id'),
-        'name': fields.String(required=True, description='song name'),
-        'duration': fields.Integer(required=True, description='song duration in seconds'),
-        'uploaded_time': fields.DateTime(description='time of song upload')
+        'id': fields.Integer(required=True),
+        'name': fields.String(required=True),
+        'duration': fields.Integer(required=True),
+        'uploaded_time': fields.DateTime
+    }
+
+    podcast = {
+        'id': fields.Integer(required=True),
+        'name': fields.String(required=True),
+        'host': fields.String(required=True),
+        'participants': fields.List(fields.String, required=True),
+        'duration': fields.Integer(required=True),
+        'uploaded_time': fields.DateTime
+    }
+
+    audiobook = {
+        'id': fields.Integer(required=True),
+        'title': fields.String(required=True),
+        'author': fields.String(required=True),
+        'narrator': fields.String(required=True),
+        'duration': fields.Integer(required=True),
+        'uploaded_time': fields.DateTime
     }
 
     def __init__(self, api):
@@ -32,3 +50,9 @@ class Dto:
 
     def get_song_dto(self):
         return self.api.model('Song', self.song)
+
+    def get_podcast_dto(self):
+        return self.api.model('Podcast', self.podcast)
+
+    def get_audiobook_dto(self):
+        return self.api.model('Audiobook', self.audiobook)
